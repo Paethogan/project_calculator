@@ -19,27 +19,27 @@
                         <button class="button operator" id="multiply">X</button>
                     </div>
                     <div class="row" id="row-2">
-                        <button class="button" id="seven">7</button>
-                        <button class="button" id="eight">8</button>
-                        <button class="button" id="nine">9</button>
+                        <button class="button" id="seven" value="7">7</button>
+                        <button class="button" id="eight" value="8">8</button>
+                        <button class="button" id="nine" value="9">9</button>
                         <button class="button operator" id="subtract">-</button>
                     </div>
                     <div class="row" id="row-3">
-                        <button class="button" id="four">4</button>
-                        <button class="button" id="five">5</button>
-                        <button class="button" id="six">6</button>
+                        <button class="button" id="four" value="4">4</button>
+                        <button class="button" id="five" value="5">5</button>
+                        <button class="button" id="six" value="6">6</button>
                         <button class="button operator" id="add">+</button>
                     </div>
                 </div>
                 <div class="lower-rows">
                     <div class="lower-container">
                         <div class="row" id="row-4">
-                            <button class="button" id="one">1</button>
-                            <button class="button" id="two">2</button>
-                            <button class="button" id="three">3</button>
+                            <button class="button" id="one" value="1">1</button>
+                            <button class="button" id="two" value="2">2</button>
+                            <button class="button" id="three" value="3">3</button>
                         </div>
                         <div class="row" id="row-5">
-                            <button class="button" id="zero">0</button>
+                            <button class="button" id="zero" value="0">0</button>
                             <button class="button" id="decimal">.</button>
                         </div>
                     </div>
@@ -52,6 +52,33 @@
         </section>
     </main>
     <script>
+
+        function add(...num) {
+            return num.reduce((sum, num) => sum + num);
+        }
+
+        function subtract(...num) {
+            return num.reduce((total, num) => total - num);
+        }
+
+        function multiply(...num) {
+            return num.reduce((product, num) => product * num);
+        }
+
+        function divide(...num) {
+            return num.reduce((remainder, num) => remainder / num);
+        }
+
+        let clickedButtons = [];
+        
+        document.querySelectorAll("button").forEach(button => {
+            button.addEventListener("click", (event) => {
+                let btnValue = event.currentTarget.value;
+                clickedButtons.push(btnValue);
+                document.querySelector(".screen").textContent = clickedButtons.join('');
+                console.log(btnValue);
+            });
+        });
         
     </script>
 </body>
