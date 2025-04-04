@@ -15,20 +15,20 @@
                 <div class="upper-rows">
                     <div class="row" id="row-1">
                         <button class="button operator" id="clear">C</button>
-                        <button class="button operator" id="divide">/</button>
-                        <button class="button operator" id="multiply">X</button>
+                        <button class="button operator" id="divide" value="/">/</button>
+                        <button class="button operator" id="multiply" value="×">X</button>
                     </div>
                     <div class="row" id="row-2">
                         <button class="button" id="seven" value="7">7</button>
                         <button class="button" id="eight" value="8">8</button>
                         <button class="button" id="nine" value="9">9</button>
-                        <button class="button operator" id="subtract">-</button>
+                        <button class="button operator" id="subtract" value="-">-</button>
                     </div>
                     <div class="row" id="row-3">
                         <button class="button" id="four" value="4">4</button>
                         <button class="button" id="five" value="5">5</button>
                         <button class="button" id="six" value="6">6</button>
-                        <button class="button operator" id="add">+</button>
+                        <button class="button operator" id="add" value="+">+</button>
                     </div>
                 </div>
                 <div class="lower-rows">
@@ -40,7 +40,7 @@
                         </div>
                         <div class="row" id="row-5">
                             <button class="button" id="zero" value="0">0</button>
-                            <button class="button" id="decimal">.</button>
+                            <button class="button" id="decimal" value=".">.</button>
                         </div>
                     </div>
                     <div class="single">
@@ -69,13 +69,68 @@
             return num.reduce((remainder, num) => remainder / num);
         }
 
+        function operate(operator, num1, num2) {
+            switch (operator) {
+                case '+': 
+                    return add(num1, num2);
+                case '-':
+                    return subtract(num1, num2);
+                case '×':
+                    return multiply(num1, num2);
+                case '/':
+                    return divide(num1, num2);
+                default:
+                    return "Invalid";
+                
+            }
+
+        }
+
+        function clear() {
+            clickedButtons = [];
+            output.textContent = '';
+        }
+
         let clickedButtons = [];
         
+        let output = document.querySelector(".screen");
         document.querySelectorAll("button").forEach(button => {
             button.addEventListener("click", (event) => {
                 let btnValue = event.currentTarget.value;
-                clickedButtons.push(btnValue);
-                document.querySelector(".screen").textContent = clickedButtons.join('');
+                let btnId = event.target.id;
+
+                if (btnValue) {
+                    if (isNaN(btnValue) && btnValue !== ".") {
+                        clickedButtons.push(" " + btnValue + " ");
+                    } else {
+                        clickedButtons.push(btnValue);
+                    }
+                }
+                output.textContent = clickedButtons.join('');
+
+                if (btnId === "equal") {
+                    let expression = clickedButtons.join('').trim();
+                    let parts = expression.split(' ');
+
+                    while (parts.length >= 3) {
+                        let num1 = parseFloat(parts[0]);
+                        let operator = parts[1];
+                        let num2 = parseFloat(parts[2]);
+
+                        let result = operate(operator, num1, num2);
+
+                        parts.splice(0, 3, result.toString());
+
+                    }
+                    output.textContent = parts[0];
+                }
+
+                
+
+                if (btnId === "clear") {
+                    clear();
+                }
+
                 console.log(btnValue);
             });
         });
