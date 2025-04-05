@@ -16,7 +16,7 @@
                     <div class="row" id="row-1">
                         <button class="button operator" id="clear">C</button>
                         <button class="button operator" id="divide" value="/">/</button>
-                        <button class="button operator" id="multiply" value="×">X</button>
+                        <button class="button operator" id="multiply" value="*">X</button>
                     </div>
                     <div class="row" id="row-2">
                         <button class="button" id="seven" value="7">7</button>
@@ -75,7 +75,7 @@
                     return add(num1, num2);
                 case '-':
                     return subtract(num1, num2);
-                case '×':
+                case '*':
                     return multiply(num1, num2);
                 case '/':
                     return divide(num1, num2);
@@ -92,6 +92,7 @@
         }
 
         let clickedButtons = [];
+        let lastButton = '';
         
         let output = document.querySelector(".screen");
         document.querySelectorAll("button").forEach(button => {
@@ -99,30 +100,53 @@
                 let btnValue = event.currentTarget.value;
                 let btnId = event.target.id;
 
+                let expression = clickedButtons.join('').trim();
+                let parts = expression.split(' ');
+
                 if (btnValue) {
-                    if (isNaN(btnValue) && btnValue !== ".") {
+                    if (btnValue === ".") {
+
+                        let lastNumber = clickedButtons.join('').split(/[\+\-\*\/]/).pop(); // find last number typed
+                        if (lastNumber.includes(".")) {
+                            return;
+                        } else {
+                            clickedButtons.push(btnValue);
+                        }
+      
+                } else if (isNaN(btnValue)) {
+                        if ((parts[0] === "" || isNaN(parts[parts.length - 1]) || parts.length === 3) && btnValue !== ".") return;
+                        if (btnValue === lastButton) return;
+                        
                         clickedButtons.push(" " + btnValue + " ");
                     } else {
                         clickedButtons.push(btnValue);
                     }
+                    lastButton = btnValue;
                 }
+             
                 output.textContent = clickedButtons.join('');
 
                 if (btnId === "equal") {
-                    let expression = clickedButtons.join('').trim();
-                    let parts = expression.split(' ');
-
-                    while (parts.length >= 3) {
+                    if (parts.length === 3) {
                         let num1 = parseFloat(parts[0]);
                         let operator = parts[1];
                         let num2 = parseFloat(parts[2]);
 
                         let result = operate(operator, num1, num2);
 
-                        parts.splice(0, 3, result.toString());
+                        let resultStr = result.toString()
 
+                        if ((operator === '/' || operator === '*') && resultStr.includes(".") && resultStr.split(".")[1].length <= 1) {
+                            result = Math.round(result * 10) / 10;
+                        }
+                        
+                        output.textContent = result;
+                        clickedButtons = [result.toString()];
+
+                    } else {
+                        clear();
                     }
-                    output.textContent = parts[0];
+                    
                 }
 
                 
