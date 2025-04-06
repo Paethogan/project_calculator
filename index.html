@@ -16,7 +16,7 @@
                     <div class="row" id="row-1">
                         <button class="button operator" id="clear">C</button>
                         <button class="button operator" id="divide" value="/">/</button>
-                        <button class="button operator" id="multiply" value="*">X</button>
+                        <button class="button operator" id="multiply" value="*">×</button>
                     </div>
                     <div class="row" id="row-2">
                         <button class="button" id="seven" value="7">7</button>
@@ -44,7 +44,7 @@
                         </div>
                     </div>
                     <div class="single">
-                        <button class="button" id="equal">=</button>
+                        <button class="button operator" id="equal">=</button>
                     </div>
 
                 </div>
@@ -66,7 +66,12 @@
         }
 
         function divide(...num) {
-            return num.reduce((remainder, num) => remainder / num);
+            let result = num.reduce((remainder, num) => remainder / num);
+            if (result === Infinity) {
+                return "Error";
+            } else {
+                return result;
+            }
         }
 
         function operate(operator, num1, num2) {
